@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <!-- 因为想更直观的看代码所以把css、js、H5代码放在一块，不建议这样做，单纯为了演示方便*/ -->
+
+
+    <title>Document</title>
+    <style>
+        /*主体CSS*/
+        
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .main {
+            width: 320px;
+            height: 320px;
+            margin: 100px auto;
+            position: relative;
+            border: 2px solid skyblue;
+        }
+        
+        .rotate {
+            -webkit-animation: rot 5s linear infinite;
+            animation: rot 5s linear infinite;
+            animation-play-state: paused;
+            -webkit-animation-play-state: paused;
+        }
+        
+        @keyframes rot {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .play {
+            cursor: pointer;
+            width: 250px;
+            height: 250px;
+            position: absolute;
+            z-index: 10;
+            bottom: 20px;
+            left: 35px;
+            transform: rotate(0);
+        }
+        
+        .play-b {
+            position: absolute;
+            z-index: 12;
+            width: 120px;
+            height: 152px;
+            right: 19px;
+            top: 67px;
+            transform: rotate(-17deg);
+            transform-origin: 75% 22%;
+            -webkit-transform-origin: 75% 22%;
+            cursor: pointer;
+        }
+        
+        .buttonRot {
+            -webkit-animation: brot 0.5s ease-in-out forwards;
+            animation: brot 0.5s ease-in-out forwards;
+        }
+        
+        .buttonRot_back {
+            -webkit-animation: brot_back 0.5s ease-in-out forwards;
+            animation: brot_back 0.5s ease-in-out forwards;
+        }
+        
+        @keyframes brot {
+            0% {
+                transform: rotate(-17deg);
+            }
+            100% {
+                transform: rotate(-4deg);
+            }
+        }
+        
+        @keyframes brot_back {
+            0% {
+                transform: rotate(-4deg);
+            }
+            100% {
+                transform: rotate(-17deg);
+            }
+        }
+        
+        .play-pic {
+            position: absolute;
+            top: 78px;
+            left: 80px;
+            border-radius: 50%;
+            width: 92px;
+        }
+    </style>
+    <style>
+        /*文字特效css*/
+        
+        .main h1 {
+            color: #9d9d9d;
+            font-family: Helvetica;
+            margin: 0;
+            padding: 0;
+            font-size: 17px;
+            position: relative;
+        }
+        
+        .main h1::after {
+            content: attr(data-spotlight);
+            color: transparent;
+            position: absolute;
+            top: 0;
+            left: 0;
+            -webkit-clip-path: ellipse(16px 16px at 0% 50%);
+            clip-path: ellipse(16px 16px at 0% 50%);
+            animation: spotlight 7s infinite;
+            background-image: url(https://images.unsplash.com/photo-1579547621869-0ddb5f237392?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80);
+            background-size: 50%;
+            background-position: center center;
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+        
+        @keyframes spotlight {
+            0% {
+                -webkit-clip-path: ellipse(16px 16px at 0% 50%);
+                clip-path: ellipse(16px 16px at 0% 50%);
+            }
+            50% {
+                -webkit-clip-path: ellipse(16px 16px at 100% 50%);
+                clip-path: ellipse(16px 16px at 100% 50%);
+            }
+            100% {
+                -webkit-clip-path: ellipse(16px 16px at 0% 50%);
+                clip-path: ellipse(16px 16px at 0% 50%);
+            }
+        }
+    </style>
+</head>
+<script>
+    //旋转JS代码
+    $(document).ready(function() {
+        var mark = true;
+        var deg = 0;
+        var flag = false;
+        var myMusic = document.getElementById("myMusic");
+        $(".play-b").eq(0).click(function() {
+            $(".play").addClass("rotate");
+            if (mark) {
+                if (flag) {
+                    $(".play-b").eq(0).removeClass("buttonRot_back");
+                    flag = false;
+                }
+
+                $(".play-b").eq(0).addClass("buttonRot");
+                $(".play").css({
+                    "animation-play-state": "running",
+                    " -webkit-animation-play-state": "running"
+                });
+                myMusic.play();
+                mark = false;
+            } else {
+                $(".play-b").eq(0).removeClass("buttonRot");
+                $(".play-b").eq(0).addClass("buttonRot_back");
+                flag = true;
+                deg = cAngle() + 'deg';
+                console.log(deg);
+                myMusic.pause();
+                $(".play").css({
+                    "animation-play-state": "paused",
+                    " -webkit-animation-play-state": "paused"
+                });
+
+
+                mark = true;
+            }
+        });
+
+        $(".play").eq(0).click(function() {
+            $(this).addClass("rotate");
+            if (mark) {
+                if (flag) {
+                    $(".play-b").eq(0).removeClass("buttonRot_back");
+                    flag = false;
+                }
+
+                $(".play-b").eq(0).addClass("buttonRot");
+                $(this).css({
+                    "animation-play-state": "running",
+                    " -webkit-animation-play-state": "running"
+                });
+                myMusic.play();
+
+                mark = false;
+            } else {
+                $(".play-b").eq(0).removeClass("buttonRot");
+                $(".play-b").eq(0).addClass("buttonRot_back");
+                flag = true;
+                deg = cAngle() + 'deg';
+                console.log(deg);
+                myMusic.pause();
+                $(this).css({
+                    "animation-play-state": "paused",
+                    " -webkit-animation-play-state": "paused"
+                });
+
+
+                mark = true;
+            }
+        });
+
+        function cAngle() {
+            // var el = document.getElementById("id1");
+            var btn = document.getElementsByClassName("play")[0];
+            var st = window.getComputedStyle(btn, null);
+            var tr = st.getPropertyValue("-webkit-transform") ||
+                st.getPropertyValue("transform") || "FAIL";
+            var values = tr.split('(')[1].split(')')[0].split(',');
+            var a = values[0];
+            var b = values[1];
+            var c = values[2];
+            var d = values[3];
+            var angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+            return angle
+        }
+    });
+</script>
+<script>
+    //心形鼠标
+    window.onload = (function(window, document, undefined) {
+
+        var hearts = [];
+
+        window.requestAnimationFrame = (function() {
+            return window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                window.msRequestAnimationFrame ||
+                function(callback) {
+                    setTimeout(callback, 1000 / 60);
+                }
+        })();
+
+        init();
+
+        function init() {
+            css(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+            attachEvent();
+            gameloop();
+        }
+
+        function gameloop() {
+            for (var i = 0; i < hearts.length; i++) {
+                if (hearts[i].alpha <= 0) {
+                    document.body.removeChild(hearts[i].el);
+                    hearts.splice(i, 1);
+                    continue;
+                }
+
+                hearts[i].y--;
+                hearts[i].scale += 0.004;
+                hearts[i].alpha -= 0.013;
+                hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+            }
+
+            requestAnimationFrame(gameloop);
+        }
+
+        function attachEvent() {
+            var old = typeof window.onclick === "function" && window.onclick;
+            window.onclick = function(event) {
+                old && old();
+                createHeart(event);
+            }
+        }
+
+        function createHeart(event) {
+            var d = document.createElement("div");
+            d.className = "heart";
+            hearts.push({
+                el: d,
+                x: event.clientX - 5,
+                y: event.clientY - 5,
+                scale: 1,
+                alpha: 1,
+                color: randomColor()
+            });
+
+            document.body.appendChild(d);
+        }
+
+        function css(css) {
+            var style = document.createElement("style");
+            style.type = "text/css";
+            try {
+                style.appendChild(document.createTextNode(css));
+            } catch (ex) {
+                style.styleSheet.cssText = css;
+            }
+
+            document.getElementsByTagName('head')[0].appendChild(style);
+        }
+
+        function randomColor() {
+            return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+        }
+
+    })(window, document);
+</script>
+
+<body>
+
+    <div class="main">
+        <h1 data-spotlight="DIY黑胶MP3">DIY黑胶MP3</h1>
+        <div>
+            <div class="play">
+                <img src="./index2.png" width="250px" height="250px" alt="">
+                <img src="./平凡的一天.jpg " class="play-pic" alt="">
+            </div>
+        </div>
+        <div class="play-b">
+            <img src="./button.png" width="100%" alt="">
+        </div>
+
+    </div>
+    <audio id="myMusic" src="http://m801.music.126.net/20230108160545/a344751a793011a7c90f2491d1b8c527/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/23281758309/6463/1b16/bab4/aa3394b2bae921e7975977cf0ad81633.mp3" loop></audio>
+    </div>
+</body>
+
+</html>
